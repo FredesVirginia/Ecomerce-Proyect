@@ -13,6 +13,11 @@ router.get("/", async (req, res) => {
     res.send("Hola Jarry")
 });
 
+
+router.get("/register" , (req , res)=>{
+    
+});
+
 router.get("/login" , (req, res) =>{
     res.send(`<html>
     <head> <title>Login</title></head>
