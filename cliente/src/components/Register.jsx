@@ -48,9 +48,9 @@ export default function Register() {
   });
 
 
-  const register1 = () => {
-    dispatch(register(user));
-    console.log("Los datos son ", user);
+  const register1 = (values) => {
+    dispatch(register(values));
+    console.log("Los datos son ", values);
     toast.success("RegistroExitos");
   }
   return (
@@ -67,13 +67,13 @@ export default function Register() {
               onSubmit={async (values) => {
                 setUser(values)
                
-                register1();
+                register1(values);
                
               }}
             >
 
-              {({ errors, touched, isSubmitting, values, handleChange,
-                handleBlur }) => (
+              {({ errors, touched,  values, handleChange,
+                 }) => (
                 <Form>
                   <h2 className='text-left ml-7 text-2xl text-gray-600 mb-4'>Registro</h2>
 
@@ -85,7 +85,9 @@ export default function Register() {
                         id="name"
                         label="Nombre"
                         name="name"
+                     
                         placeholder="name"
+                        
                         className="py-1 px-2 border border-gray-300 rounded-md"
                       />
                      {
@@ -105,6 +107,7 @@ export default function Register() {
                         name="surname"
                         placeholder="surname"
                         className="py-1 px-2 border border-gray-300 rounded-md"
+                       
                       />
 
 {
@@ -124,6 +127,7 @@ export default function Register() {
                         name="birthday"
                         placeholder="birthday"
                         className="py-1 px-2 border border-gray-300 rounded-md"
+                       
                       />
 
 {
@@ -142,7 +146,7 @@ export default function Register() {
                         name="address"
                         placeholder="address"
                         className="py-1 px-2 border border-gray-300 rounded-md"
-                       
+                        
                       />
 
 {
@@ -164,6 +168,7 @@ export default function Register() {
                         label="Correo"
                         placeholder="example@outlook.com"
                         className="py-1 px-2 border border-gray-300 rounded-md"
+                        
                       />
 
 {
@@ -183,6 +188,7 @@ export default function Register() {
                         placeholder="password"
                         type="password"
                         className="py-1 px-2 border border-gray-300 rounded-md"
+                        
                       />
 
 {
@@ -203,6 +209,7 @@ export default function Register() {
                         placeholder="confirm password"
                         type="password"
                         className="py-1 px-2 border border-gray-300 rounded-md"
+                        
                       />
                        {
                         errors.confirmPassword && touched.confirmPassword && 
@@ -221,6 +228,7 @@ export default function Register() {
                         placeholder="confirm password"
                         type="text"
                         className="py-1 px-2 border border-gray-300 rounded-md"
+                       
                       />
                        {
                         errors.phone && touched.phone && 
