@@ -4,8 +4,11 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import {toast} from "react-hot-toast";
+import { useDispatch } from 'react-redux';
+import {register} from "../Redux/actions";
 export default function Register() {
 
+  const dispatch = useDispatch();
   const [user, setUser] = useState({
     "name": "",
     "surname": "",
@@ -17,6 +20,8 @@ export default function Register() {
   });
 
   const registerSchema = Yup.object().shape({
+    birthday:Yup.date().
+    required("Campo requerido"),
     email: Yup.string()
       .email('Formato Inválido')
       .required('Campo Requerido'),
@@ -43,8 +48,8 @@ export default function Register() {
   });
 
 
-  const register = () => {
-    
+  const register1 = () => {
+    dispatch(register(user));
     console.log("Los datos son ", user);
     toast.success("RegistroExitos");
   }
@@ -62,7 +67,7 @@ export default function Register() {
               onSubmit={async (values) => {
                 setUser(values)
                
-                register();
+                register1();
                
               }}
             >
@@ -106,6 +111,25 @@ export default function Register() {
                         errors.surname && touched.surname && 
                         (
                             <ErrorMessage  className="text-sm text-red-600" name = 'surname' component='div'/>
+                        )
+                    }
+                     </div>
+
+                     <div className='flex flex-col'>
+                     <label className="text-gray-600">Fecha de Nacimiento</label>
+                     <Field
+                     type="date"
+                        label="Fecha de Nacimiento"
+                        id="birthday"
+                        name="birthday"
+                        placeholder="birthday"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+
+{
+                        errors.birthday && touched.birthday && 
+                        (
+                            <ErrorMessage  className="text-sm text-red-600" name = 'birthday' component='div'/>
                         )
                     }
                      </div>
@@ -187,28 +211,29 @@ export default function Register() {
                         )
                     }
                      </div>
-                    </div>
-                  </div>
 
-
-                  <div className='mx-10 my-5 '>
-                  <label className="text-gray-600">Telefono</label>
-                    <Field
-                      
-                      label="Telefono"
-                      id="phone"
-                      name="phone"
-                      placeholder="phone"
-                      className=" w-full py-1 px-2 border border-gray-300 rounded-md"
-                    
-                    />
-                     {
+                     <div className='flex flex-col'>
+                     <label className="text-gray-600">Telefono</label>
+                     <Field
+                        label="Telefono"
+                        id="phone"
+                        name="phone"
+                        placeholder="confirm password"
+                        type="text"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+                       {
                         errors.phone && touched.phone && 
                         (
                             <ErrorMessage className="text-sm text-red-600" name = 'phone' component='div'/>
                         )
                     }
+                     </div>
+                    </div>
                   </div>
+
+
+                 
                   <div className="flex justify-end mr-5">
                     <Button variant="contained" type="submit" >Ingresar</Button>
                    

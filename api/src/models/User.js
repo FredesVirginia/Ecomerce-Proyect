@@ -4,6 +4,14 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
     // Defino el modelo
     const User = sequelize.define('user', {
+
+      id:{
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+        allowNull: false,
+        unique: true
+         },
       name: {
         type: DataTypes.STRING(50), // Tamaño máximo de 50 caracteres
         allowNull: false,
@@ -25,7 +33,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       birthday: {
-        type: DataTypes.DATEONLY, // Tipo de dato para fecha sin hora
+        type: DataTypes.STRING(), // Tipo de dato para fecha sin hora
         allowNull: false,
       },
     });

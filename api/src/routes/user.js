@@ -3,7 +3,10 @@ const express = require("express");
 const  multer = require("multer");
 const upload = multer ({dest : 'uploads/'})
 const {saveImage} = require("../middleware/helpers");
+const {Sequelize} = require('sequelize');
+const {User} = require('../db')
 const jwt = require ('jsonwebtoken');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const router = Router();
@@ -14,9 +17,60 @@ router.get("/", async (req, res) => {
 });
 
 
-router.get("/register" , (req , res)=>{
+router.post("/register" , async(req , res)=>{
+   try{
+    const { name, surname , phone, email, address, password , birthday } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10); // El segundo argumento es el número de rondas de hashing
+
+    // Crear un nuevo usuario con la contraseña encriptada
+    let newUser = await User.create({ name, surname, phone, email, address, password: hashedPassword, birthday });
+    console.log("EL video juego es ", newUser)
+    let user = await User.findAll();
     
+    res.status(200).json(user);
+   }catch(error){
+        res.status(500)
+        console.log("EL error fue " , error);
+   }
 });
+
+
+
+router.post("/", async (req , res)=>{
+    try {
+          const { name, rating , released, description, genero , plataforma } = req.body;
+          let image = "https://www.semana.com/resizer/zpFAqbo5FBPBFoXFqFO9GQTPi8o=/1920x1080/smart/filters:format(jpg):quality(80)/cloudfront-us-east-1.images.arcpublishing.com/semana/DD5X25JSKJEZ5JDYZAHJH4S27M.jpg";
+          let newVideogame = await Videogame.create({ name,  rating, image,released , description});
+          let platform = await Platforms.create({ name : plataforma}) ;
+          let genre =  await Genres.create({name : genero})     ;  
+          newVideogame.addPlatforms(platform);
+          newVideogame.addGenres(genre);
+
+          let videogame = await Videogame.findAll( {
+            include: [
+              {
+                model: Platforms,
+                attributes: ['name'],
+                through: {
+                  attributes: []
+                }
+              },
+              {
+                model: Genres,
+                attributes: ['name'],
+                through: {
+                  attributes: []
+                }
+              }
+            ]
+          });
+          console.log("EL video juego es ", videogame)
+          res.status(200).json(videogame);
+    } catch(error){
+        res.status(404).send("Informe de errores desde el Banck" , error)
+    }
+
+  });
 
 router.get("/login" , (req, res) =>{
     res.send(`<html>
