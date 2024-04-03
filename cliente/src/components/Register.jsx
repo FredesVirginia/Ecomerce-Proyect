@@ -1,18 +1,19 @@
-import TextField from '@mui/material/TextField';
+
 import Button from '@mui/material/Button';
-import {Formik , Form , ErrorMessage} from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import {useState} from "react";
+import { useState } from "react";
+import {toast} from "react-hot-toast";
 export default function Register() {
 
-  const [user , setUser] = useState({
-    "name":"",
-    "surname":"",
-    "phone" : "",
-    "password" : "",
-    "confirmPassword":"",
-   "address" :"",
-   "email":""
+  const [user, setUser] = useState({
+    "name": "",
+    "surname": "",
+    "phone": "",
+    "password": "",
+    "confirmPassword": "",
+    "address": "",
+    "email": ""
   });
 
   const registerSchema = Yup.object().shape({
@@ -40,145 +41,191 @@ export default function Register() {
       .matches(/^\d+$/, 'El número de teléfono solo debe contener números')
       .required('Campo Requerido'),
   });
-  
+
+
+  const register = () => {
+    
+    console.log("Los datos son ", user);
+    toast.success("RegistroExitos");
+  }
   return (
     <div>
-     <div className="fondo">
-     <div className="m-10 flex   justify-center items-center h-screen">
-      <div className="bg-white py-10 w-[400px] rounded-lg">
-       
-           <Formik 
-           initialValues={user}
-           validationSchema={registerSchema}
-           onSubmit={async (values) => {
-             await new Promise((r) => setTimeout(r, 500));
-             alert(JSON.stringify(values, null, 2));
-           }}
-         >
-           {({ errors, touched, isSubmitting }) => (
-             <Form className="bg-red-300 flex space-x-4 mx-5">
-             
-           
+      <div className="fondo">
+        <div className=" flex   justify-center items-center h-screen">
+          <div className="bg-white py-10  rounded-lg">
 
-            
-             <div>
-             <TextField
-                 id="name"
-                 label="Nombre"
-                 name="name"
-                 placeholder="name"
-                 value={user.name}
-                 onChange={(e) => setUser({ ...user, name: e.target.value })}
-                 error={errors.name && touched.name}
-                 helperText={errors.name && touched.name && errors.name}
-               />
-               {errors.name && touched.name && (
-                 <ErrorMessage name="name" component="div" />
-               )}
+            <Formik
+              initialValues={user}
+              validationSchema={registerSchema}
 
-             
-               <TextField
-               label="Apellido"
-                 id="surname"
-                 name="surname"
-                 placeholder="surname"
-                 value={user.surname}
-                 onChange={(e) => setUser({ ...user, surname: e.target.value })}
-                 error={errors.surname && touched.surname}
-                 helperText={errors.surname && touched.surname && errors.surname}
-               />
-               {errors.surname && touched.surname && (
-                 <ErrorMessage name="surname" component="div" />
-               )}
 
-             
-               <TextField
-               label="Dirreccion"
-                 id="address"
-                 name="address"
-                 placeholder="address"
-                 value={user.address}
-                 onChange={(e) => setUser({ ...user, address: e.target.value })}
-                 error={errors.address && touched.address}
-                 helperText={errors.address && touched.address && errors.address}
-               />
-               {errors.address && touched.address && (
-                 <ErrorMessage name="address" component="div" />
-               )}
-
-            
-               <TextField
-               label="Telefono"
-                 id="phone"
-                 name="phone"
-                 placeholder="phone"
-                 value={user.phone}
-                 onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                 error={errors.phone && touched.phone}
-                 helperText={errors.phone && touched.phone && errors.phone}
-               />
-               {errors.phone && touched.phone && (
-                 <ErrorMessage name="phone" component="div" />
-               )}
-             </div>
-               <div>
-             <TextField
-                 id="email"
-                 name="email"
-                 label="Correo"
-                 placeholder="example@outlook.com"
-                 value={user.email}
-                 onChange={(e) => setUser({ ...user, email: e.target.value })}
-                 error={errors.email && touched.email}
-                 helperText={errors.email && touched.email && errors.email}
-               />
-               {errors.email && touched.email && (
-                 <ErrorMessage name="email" component="div" />
-               )}
-
+              onSubmit={async (values) => {
+                setUser(values)
                
-               <TextField
-               label="Clave"
-                 id="password"
-                 name="password"
-                 placeholder="password"
-                 type="password"
-                 value={user.password}
-                 onChange={(e) => setUser({ ...user, password: e.target.value })}
-                 error={errors.password && touched.password}
-                 helperText={errors.password && touched.password && errors.password}
-               />
-               {errors.password && touched.password && (
-                 <ErrorMessage name="password" component="div" />
-               )}
+                register();
+               
+              }}
+            >
 
-            
-               <TextField
-               label="Confirmar Clave"
-                 id="confirmPassword"
-                 name="confirmPassword"
-                 placeholder="confirm password"
-                 type="password"
-                 value={user.confirmPassword}
-                 onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
-                 error={errors.confirmPassword && touched.confirmPassword}
-                 helperText={errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
-               />
-               {errors.confirmPassword && touched.confirmPassword && (
-                 <ErrorMessage name="confirmPassword" component="div" />
-               )}
-             </div>
+              {({ errors, touched, isSubmitting, values, handleChange,
+                handleBlur }) => (
+                <Form>
+                  <h2 className='text-left ml-7 text-2xl text-gray-600 mb-4'>Registro</h2>
 
-               <Button variant="contained" type="submit" disabled={isSubmitting}>Ingresar</Button>
-               {isSubmitting ? <p>Registering...</p> : null}
-             </Form>
-           )}
-         </Formik>
+                  <div className=" flex space-x-4 mx-10">
+                    <div className='flex flex-col space-y-5 '>
+                    <div className='flex flex-col'>
+                    <label className="text-gray-600">Nombre</label>
+                      <Field
+                        id="name"
+                        label="Nombre"
+                        name="name"
+                        placeholder="name"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+                     {
+                        errors.name && touched.name && 
+                        (
+                            <ErrorMessage className="text-sm text-red-600" name = 'name' component='div'/>
+                        )
+                    }
+                    </div>
 
 
+                     <div className='flex flex-col'>
+                     <label className="text-gray-600">Apellido</label>
+                     <Field
+                        label="Apellido"
+                        id="surname"
+                        name="surname"
+                        placeholder="surname"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+
+{
+                        errors.surname && touched.surname && 
+                        (
+                            <ErrorMessage  className="text-sm text-red-600" name = 'surname' component='div'/>
+                        )
+                    }
+                     </div>
+
+                     <div className='flex flex-col'>
+                     <label className="text-gray-600">Dirreccion</label>
+                     <Field
+                        label="Dirreccion"
+                        id="address"
+                        name="address"
+                        placeholder="address"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                       
+                      />
+
+{
+                        errors.address && touched.address && 
+                        (
+                            <ErrorMessage className="text-sm text-red-600" name = 'address' component='div'/>
+                        )
+                    }
+                     </div>
+
+
+                    </div>
+                    <div className='flex flex-col space-y-5 mx-5 '>
+                    <div className='flex flex-col'>
+                    <label className="text-gray-600">Correo</label>
+                    <Field
+                        id="email"
+                        name="email"
+                        label="Correo"
+                        placeholder="example@outlook.com"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+
+{
+                        errors.email && touched.email && 
+                        (
+                            <ErrorMessage className="text-sm text-red-600" name = 'email' component='div'/>
+                        )
+                    }
+                    </div>
+
+                     <div className='flex flex-col'>
+                     <label className="text-gray-600">Clave</label>
+                     <Field
+                        label="Clave"
+                        id="password"
+                        name="password"
+                        placeholder="password"
+                        type="password"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+
+{
+                        errors.password && touched.password && 
+                        (
+                            <ErrorMessage className="text-sm text-red-600" name = 'password' component='div'/>
+                        )
+                    }
+
+                     </div>
+
+                     <div className='flex flex-col'>
+                     <label className="text-gray-600">Confirmar clave</label>
+                     <Field
+                        label="Confirmar Clave"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="confirm password"
+                        type="password"
+                        className="py-1 px-2 border border-gray-300 rounded-md"
+                      />
+                       {
+                        errors.confirmPassword && touched.confirmPassword && 
+                        (
+                            <ErrorMessage className="text-sm text-red-600" name = 'confirmPassword' component='div'/>
+                        )
+                    }
+                     </div>
+                    </div>
+                  </div>
+
+
+                  <div className='mx-10 my-5 '>
+                  <label className="text-gray-600">Telefono</label>
+                    <Field
+                      
+                      label="Telefono"
+                      id="phone"
+                      name="phone"
+                      placeholder="phone"
+                      className=" w-full py-1 px-2 border border-gray-300 rounded-md"
+                    
+                    />
+                     {
+                        errors.phone && touched.phone && 
+                        (
+                            <ErrorMessage className="text-sm text-red-600" name = 'phone' component='div'/>
+                        )
+                    }
+                  </div>
+                  <div className="flex justify-end mr-5">
+                    <Button variant="contained" type="submit" >Ingresar</Button>
+                   
+                  </div>
+                </Form>
+
+              )}
+
+
+
+
+            </Formik>
+
+
+          </div>
+        </div>
       </div>
-    </div>
-    </div>
     </div>
   )
 }

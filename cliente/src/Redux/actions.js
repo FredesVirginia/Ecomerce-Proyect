@@ -1,19 +1,16 @@
 
 
 
-export function register(){
+export function register(user){
     return async function (dispatch){
         try{
-            
-            return dispatch ({
-                type: "REGISTER",
-                
-
-
+            const newUser = await axios.post(``,user);
+            console.log("Desde action. Videogame creado es " , newUser);
+            return dispatch({
+                type: "REGISTER"
             })
-            
         }catch(error){
-            console.log("Error desde action es este ", error);
+            console.log("Informe de errores de action Post User" , error);
         }
     }
 }
