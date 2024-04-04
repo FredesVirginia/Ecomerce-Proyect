@@ -18,6 +18,13 @@ export default function reducer( state = initialState, action){
                     ...state
                 }
             }
+
+            case "LOGIN" : {
+                return {
+                    ...state ,
+                    login : action.payload
+                }
+            }
             default : 
                 return {
                     ...state

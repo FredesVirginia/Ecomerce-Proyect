@@ -2,12 +2,14 @@
 import Button from '@mui/material/Button';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import {toast} from "react-hot-toast";
 import { useDispatch } from 'react-redux';
 import {register} from "../Redux/actions";
 export default function Register() {
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [user, setUser] = useState({
     "name": "",
@@ -48,10 +50,18 @@ export default function Register() {
   });
 
 
-  const register1 = (values) => {
-    dispatch(register(values));
+  const register1 = async (values) => {
+  const response = await  dispatch(register(values));
+  console.log("Los datos son ", values);
+  console.log("LA respueta de dispath en el componete es " , response);
+  if(response.payload == "200"){
     console.log("Los datos son ", values);
     toast.success("RegistroExitos");
+   navigate("/");
+  }else{
+    
+    toast.error("Ocurrio un Error. Vuelve a intertarlo");
+    }
   }
   return (
     <div>
@@ -65,14 +75,14 @@ export default function Register() {
 
 
               onSubmit={async (values) => {
-                setUser(values)
                
+                console.log("Se apreto algo");
                 register1(values);
                
               }}
             >
 
-              {({ errors, touched,  values, handleChange,
+              {({ errors, touched
                  }) => (
                 <Form>
                   <h2 className='text-left ml-7 text-2xl text-gray-600 mb-4'>Registro</h2>

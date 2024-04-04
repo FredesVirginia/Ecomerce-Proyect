@@ -16,10 +16,42 @@ router.get("/", async (req, res) => {
     res.send("Hola Jarry")
 });
 
+router.post("/login" , async (req, res)=>{
+    const { email, password } = req.body;
+
+    try {
+        // Buscar el usuario en la base de datos por su correo electrónico
+        const user = await User.findOne({ where: { email } });
+
+        // Si no se encuentra el usuario, devolver un mensaje de error
+        if (!user) {
+            return res.status(401).json({ message: "Correo electrónico o contraseña incorrectos" });
+        }
+
+        // Verificar la contraseña del usuario
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        // Si las contraseñas no coinciden, devolver un mensaje de error
+        if (!passwordMatch) {
+            return res.status(401).json({ message: "Correo electrónico o contraseña incorrectos" });
+        }
+
+        // Si las credenciales son válidas, generar un token JWT
+        const token = jwt.sign({ id: user.id, email: user.email }, 'secreto');
+
+        // Devolver el token como respuesta
+        res.json({ token });
+    } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+    
+    
+});
 
 router.post("/register" , async(req , res)=>{
    try{
-    const { name, surname , phone, email, address, password , birthday } = req.body;
+    const { name, surname , phone, email, address, password  , birthday } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10); // El segundo argumento es el número de rondas de hashing
 
     // Crear un nuevo usuario con la contraseña encriptada
