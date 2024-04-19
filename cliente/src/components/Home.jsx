@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
-import { useState } from "react";
-import {toast} from "react-hot-toast";
+import { useEffect } from 'react';
+
 import { useDispatch  , useSelector } from 'react-redux';
 import { logOut } from "../Redux/actions";
-import Login from "../components/Login";
+
 export default function Home() {
   const login = useSelector(state =>state.login);
   const navigate = useNavigate();
@@ -23,8 +22,11 @@ export default function Home() {
     <div>
       {login ? (
         <div>
+         <nav className="bg-cyan-300 p-10 text-center">Welcome </nav>
           <h1 className="text-center text-3xl">Bienvenido al Home</h1>
-          <button onClick={logout} className="p-5 bg-cyan-400">Log Out</button>
+         <div className="flex justify-center items-center mt-10">
+         <button onClick={logout} className="p-5 bg-cyan-400">Log Out</button>
+         </div>
         </div>
       ) : (
       null

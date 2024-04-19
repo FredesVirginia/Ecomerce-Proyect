@@ -28,6 +28,11 @@ module.exports = (sequelize) => {
       email: {
         type: DataTypes.STRING(100), // Tamaño máximo de 100 caracteres
         allowNull: false,
+      }, 
+
+      role: {
+        type: DataTypes.STRING(100), // Tamaño máximo de 100 caracteres
+        allowNull: false,
       },
       password: {
         type: DataTypes.STRING(255), // Tamaño máximo de 255 caracteres
