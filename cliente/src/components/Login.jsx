@@ -30,17 +30,28 @@ export default function Login() {
     "email": ""
   });
 
-  const login1 = async (values) =>{
-    console.log("Lo valores en el suubmt son " , values);
-   const response = await dispatch(login(values));
-   if(response.payload){
-    toast.success("Ingresando");
-    navigate("/home")
-   }
-   else{
-    toast.error("Error de Credenciales");
-   }
-  }
+  const login1 = async (values) => {
+    console.log("Los valores en el submit son ", values);
+    const response = await dispatch(login(values));
+    console.log("Lo que viene de LOGIN RESPONSE ES ", response);
+
+    // Verificar si response está definido
+    if (response && response.payload && response.payload.status == "200") {
+        toast.success("hecho 200");
+
+        // Verificar el rol del usuario
+        const userRole = response.payload.user.user.role;
+        if (userRole === "user") {
+            toast.success("Ingresando como usuario");
+            navigate("/dashboardUser");
+        } else if (userRole === "client") {
+            toast.success("Ingresando como cliente");
+            navigate("/dashboardClient");
+        }
+    } else {
+        toast.error("Credenciales Incorrectas");
+    }
+};
   return (
     <div className="fondo">
      <div className="flex   justify-center items-center h-screen">

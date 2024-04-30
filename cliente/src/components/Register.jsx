@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch } from 'react-redux';
 import { register } from "../Redux/actions";
@@ -16,16 +16,22 @@ export default function Register() {
     "surname": "",
     "phone": "",
     "password": "",
+    "role" : "" , 
     "confirmPassword": "",
     "address": "",
-    "email": ""
+    "email": "",
+    "birthday":"" ,
   });
 
 
   const [seleccionado, setSeleccionado] = useState(null);
   const [error , setError] = useState(true);
 
+
+
+  //FUNCION PARA CAPTAR TIPO DE CLIENTE
   const handleClick = (opcion) => {
+    console.log("LA OPCION ES " , opcion)
     if (opcion !== seleccionado) {
       setSeleccionado(opcion);
       setError(false);
@@ -68,20 +74,43 @@ export default function Register() {
       .required('Campo Requerido'),
   });
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  useEffect(() => {
+    if (formSubmitted) {
+      console.log("EL USER ES ", user);
+  
+      dispatch(register(user)).then(response => {
+        console.log("Los datos son ", user);
+        console.log("LA respuesta de dispatch en el componente es ", response);
+        
+        if (response.payload == "200") {
+          toast.success("Registro Exitoso");
+          navigate("/");
+        } else {
+          toast.error("Ocurrió un error. Vuelve a intentarlo");
+          // No deberías navegar aquí, ya que el registro falló. Mantente en la página de registro.
+        }
+      });
+  
+      // Reiniciamos el estado después de enviar el formulario
+      setFormSubmitted(false);
+    }
+  }, [formSubmitted, user, dispatch, navigate]); // Este efecto se ejecutará cada vez que `user` se actualice
 
   const register1 = async (values) => {
-    const response = await dispatch(register(values));
-    console.log("Los datos son ", values);
-    console.log("LA respueta de dispath en el componete es ", response);
-    if (response.payload == "200") {
-      console.log("Los datos son ", values);
-      toast.success("RegistroExitos");
-      navigate("/");
-    } else {
+    setUser({
+      name: values.name,
+      surname: values.surname,
+      address: values.address,
+      password: values.password,
+      email: values.email,
+      phone: values.phone,
+      birthday: values.birthday,
+      role: seleccionado
+    });
 
-      toast.error("Ocurrio un Error. Vuelve a intertarlo");
-    }
-  }
+    setFormSubmitted(true);
+  };
   return (
     <div>
       <div className="fondo py-5">
@@ -276,16 +305,16 @@ export default function Register() {
 
 
                     <center>
-                     <div  className={`m-1 rounded-xl h[90px] text-left pl-2 py-2 cursor-pointer border border-cyan-200 ${seleccionado === 'primero' ? 'bg-blue-600 text-white font-bold ' : 'bg-white text-black'
+                     <div  className={`m-1 rounded-xl h[90px] text-left pl-2 py-2 cursor-pointer border border-cyan-200 ${seleccionado === 'user' ? 'bg-blue-600 text-white font-bold ' : 'bg-white text-black'
                           }`}
-                        onClick={() => handleClick('primero')}>
+                        onClick={() => handleClick('user')}>
 
                           Para comprar productos
                      </div>
 
-                     <div  className={`m-1 rounded-xl h[90px] text-left pl-2 py-2 cursor-pointer border border-cyan-200 ${seleccionado === 'segundo' ? 'bg-blue-600 text-white font-bold ' : 'bg-white text-black'
+                     <div  className={`m-1 rounded-xl h[90px] text-left pl-2 py-2 cursor-pointer border border-cyan-200 ${seleccionado === 'client' ? 'bg-blue-600 text-white font-bold ' : 'bg-white text-black'
                           }`}
-                        onClick={() => handleClick('segundo')}>
+                        onClick={() => handleClick('client')}>
                         
                           Para vender productos
                      </div>

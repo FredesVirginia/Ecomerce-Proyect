@@ -3,7 +3,10 @@
 const initialState = {
     products: [],
     user:{},
-    login:false,
+    login:{
+        login: false,
+        user : {}
+    },
      category: [],
      shoppingCart: {},
     platforms: [],
@@ -20,9 +23,23 @@ export default function reducer( state = initialState, action){
             }
 
             case "LOGIN" : {
+                console.log(" REDUCER LOGIN " , action.payload.login  , action.payload.user )
                 return {
                     ...state ,
-                    login : action.payload
+                    login : {
+                        login: action.payload.login,
+                        user : action.payload.user
+                    }
+                }
+            }
+
+            case "LOGOUT" : {
+                return {
+                    ...state , 
+                    login : {
+                        login: action.payload.login,
+                        user :null
+                    }
                 }
             }
             default : 

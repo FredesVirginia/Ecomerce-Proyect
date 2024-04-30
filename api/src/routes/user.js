@@ -4,16 +4,21 @@ const  multer = require("multer");
 const upload = multer ({dest : 'uploads/'})
 const {saveImage} = require("../middleware/helpers");
 const {Sequelize} = require('sequelize');
-const {User} = require('../db')
+const {User , Category , Product} = require('../db')
 const jwt = require ('jsonwebtoken');
 const bcrypt = require('bcrypt');
+
 require('dotenv').config();
 
 const router = Router();
 router.use(express.urlencoded({extends : false}));
 router.use(express.json());
+
+
 router.get("/", async (req, res) => {
-    res.send("Hola Jarry")
+    const user = await User.findAll();
+
+    res.json(user)
 });
 
 router.post("/login" , async (req, res)=>{
@@ -40,7 +45,7 @@ router.post("/login" , async (req, res)=>{
         const token = jwt.sign({ id: user.id, email: user.email }, 'secreto');
 
         // Devolver el token como respuesta
-        res.json({ token });
+        res.json({ user });
     } catch (error) {
         console.error("Error al iniciar sesión:", error);
         res.status(500).json({ message: "Error interno del servidor" });
@@ -51,11 +56,11 @@ router.post("/login" , async (req, res)=>{
 
 router.post("/register" , async(req , res)=>{
    try{
-    const { name, surname , phone, email, address, password  , birthday } = req.body;
+    const { name, surname , phone, email, address, password  , birthday , role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10); // El segundo argumento es el número de rondas de hashing
 
     // Crear un nuevo usuario con la contraseña encriptada
-    let newUser = await User.create({ name, surname, phone, email, address, password: hashedPassword, birthday });
+    let newUser = await User.create({ name, surname, phone, role , email, address, password: hashedPassword, birthday });
     console.log("EL video juego es ", newUser)
     let user = await User.findAll();
     
@@ -65,6 +70,46 @@ router.post("/register" , async(req , res)=>{
         console.log("EL error fue " , error);
    }
 });
+
+
+router.post("/agregarProducto", async (req, res) => {
+    try{
+      
+      //  const { id } = req.body;
+        //const user = await User.findByPk(id);            // Corregido el método para buscar por clave primaria
+    
+        
+          //  console.log("EL usuario es " , user);
+        const { name , stock , price, description, category } = req.body;
+        const newProduct = await Product.create({ name , stock , price , description});
+        const foundCategory = await Category.findOne({ where: { name: category } });
+        console.log("La categoria es " , foundCategory);
+
+        if (foundCategory) {
+            // Asociar la categoría al producto creado
+            await newProduct.setCategory(foundCategory);
+            console.log("El producto se ha creado y se ha asociado a la categoría:", newProduct);
+
+            const product = await Product.findAll({
+                include :  {
+                    model: Category,
+                    attributes: ['name'],
+                   
+                  },
+            })
+            res.json(product);
+        } else {
+            console.log("No se encontró la categoría");
+            res.status(404).send("No se encontró la categoría");
+        }
+       
+       
+    }catch(error){
+        res.status(404);
+        res.send("Usuario no encontrado");
+    }
+});
+
 
 
 

@@ -128,7 +128,7 @@ export default function Dashboard() {
 
       </nav>
 
-      <section>
+      <section className="mt-10">
         <div className="container">
           <div className="card">
             <img className="background" src="../../public/img/iglu.png" alt="" />

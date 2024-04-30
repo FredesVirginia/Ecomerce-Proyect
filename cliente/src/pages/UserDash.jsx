@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { useDispatch  , useSelector } from 'react-redux';
 import { logOut } from "../Redux/actions";
 
-export default function Home() {
+export default function UserDash() {
+
   const login = useSelector(state =>state.login.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,17 +18,19 @@ export default function Home() {
   }, [login, navigate]); // Asegúrate de incluir navigate como una dependencia del efecto
 
 
-
   const logout = () =>{
     console.log("algo se apreto");
       dispatch(logOut());
   }
+
+
+
   return (
     <div>
-      {login ? (
+     {login ? (
         <div>
          <nav className="bg-cyan-300 p-10 text-center">Welcome </nav>
-          <h1 className="text-center text-3xl">Bienvenido al Home</h1>
+          <h1 className="text-center text-3xl">Bienvenido al Home USER</h1>
          <div className="flex justify-center items-center mt-10">
          <button onClick={logout} className="p-5 bg-cyan-400">Log Out</button>
          </div>

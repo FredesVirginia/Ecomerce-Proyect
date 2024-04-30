@@ -19,18 +19,27 @@ export function register(user){
 
 export function login(user){
     return async function (dispatch){
+        console.log("Lo que de user en ACTION LOGIN ES " , user)
         try{
             const newUser = await axios.post(`http://localhost:3001/users/login`,user);
-            console.log("Desde action Login AQUI " , newUser.data.token);
+            console.log("Desde action Login AQUI " , newUser.data);
+            console.log("Desde action Login STATUS " , newUser.status);
             if(newUser.status == "200"){
                 return dispatch({
                     type: "LOGIN", 
-                    payload : true
+                    payload : { 
+                          login: true , 
+                          user : newUser.data,
+                          status: newUser.status
+                    }
                 })
             }else{
                 return dispatch({
                     type: "LOGIN", 
-                    payload : false
+                    payload : {
+                        login : false ,
+                        user: null
+                    }
                 })
             }
            
@@ -46,7 +55,7 @@ export function logOut(){
         try{
           
             return dispatch({
-                type: "LOGIN", 
+                type: "LOGOUT", 
                 payload : false
             })
         }catch(error){

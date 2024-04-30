@@ -38,6 +38,24 @@ body{
 }
 
 
+.fondo3 {
+  
+  /* Estilos CSS */
+
+  background-image: url("../public/img/pageClient.png"); /* Ruta relativa a la carpeta public */
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  background-size: cover;
+
+
+ 
+}
+
+
+
+
+
 
 
 img {
